@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>programación asíncrona</title>
+  <style>
+    .loading {
+      opacity: .3
+    }
+  </style>
+</head>
+<body>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Edad</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <br/>
+
+  <button onclick="add()">
+    Agregar
+  </button>
+
+  <script>
+
+  function pokemones({ url }) {
+    fetch(url)
+      .then((response) => response.json())
+      .then((get) => { const { name } = get; add(name) } );
+  };
+
+  const tbody = document.querySelector("tbody");
+
+  document.addEventListener("DOMContentLoaded", async ()=> {
+
+    await fetch('https://pokeapi.co/api/v2/pokemon/?limit=3')
+      .then((response) => response.json())
+      .then((data) => { 
+        data.results.map((item) => pokemones({ url: item.url }));
+    });
+
+    await add();
+    await console.log('DOM load');
+
+  });
+
+  const loading = ({tr, nameTd}) => {
+
+    tr.className = 'loading'
+    nameTd.appendChild(document.createTextNode('Loading...'))
+    tr.appendChild(nameTd)
+    tbody.appendChild(tr)
+
+  }
+
+  const postTr = ({ name, edad, tr, nameTd }) => {
+
+    const edadTd = document.createElement("td");
+
+    edadTd.appendChild(document.createTextNode(edad))
+    nameTd.innerText = name
+
+    tr.className = ''
+    tr.appendChild(edadTd)
+    tbody.appendChild(tr)
+
+  }
+
+  async function add(name) {
+
+    function timeoutPromise(interval) {
+
+      return new Promise((resolve, reject) => {
+
+        const tr = document.createElement("tr");
+        const nameTd = document.createElement("td");
+        loading({tr, nameTd})
+
+        // console.log('ok')
+
+        setTimeout(function () {
+          resolve(postTr({ 
+            name: name || 'Asadacio',
+            edad: 123,
+            tr, nameTd
+          }));
+        }, interval);
+
+      });
+
+    }
+
+    await timeoutPromise(2000);
+
+  }
+
+  </script>
+</body>
+</html>
