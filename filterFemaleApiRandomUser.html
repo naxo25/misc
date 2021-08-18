@@ -1,0 +1,33 @@
+<p>ctrl + I</p>
+
+<script>
+async function filterFemaleApiRandomUser() {
+
+	// Obtenemos la data en formato json de la api
+  const response = await fetch('https://randomuser.me/api/?results=5').then(response => response.json());
+
+  // obtenemos los resultados (usuarios)
+  const datos = await response.results
+
+  console.log(datos)
+
+  // Filtramos por gender === female
+	const getUserGender = (payload) => datos.filter(user => user.gender === payload)
+	const usuarios = getUserGender('female')
+
+	// Mapeamos
+	const listUsers = usuarios.map((user, index) => {
+		const { name, picture } = user
+		const { title, first, last } = name
+
+		return {
+			name: [title, first, last].join(' '),
+			img: picture.large
+		}
+	})
+
+	return listUsers
+}
+
+filterFemaleApiRandomUser().then(response => console.log(response))
+</script>
