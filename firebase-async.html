@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synchronous ej</title>
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+</head>
+
+<body>
+  <div class="mask"></div>
+  <button onclick="change()">
+    clickMe
+  </button>
+
+  <script>
+    const firebaseConfig = {
+      // your config
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const dataBase = firebase.database()
+
+    async function getData () {
+      let init, fondo, img
+      const now = new Date()
+
+      await dataBase.ref(`/config/`).once('value', async snapshot => {
+        init = new Date(snapshot.val().init)
+        fondo = snapshot.val().fondo
+        img = snapshot.val().img
+        console.log(snapshot.val())
+        data = snapshot.val().data
+        finish = new Date(snapshot.val().finish)
+      })
+
+      return now <= finish && now > init && data ? { fondo, img } : {}
+    }
+
+    function signin () {
+      return getData().then(data => {
+        return data
+      })
+    }
+
+    async function start() {
+      let { fondo, img } = await signin()
+      fondo = fondo || 'https://www.ambientum.com/wp-content/uploads/2019/07/naturaleza-sol-arboles-696x463.jpg'
+      console.log(fondo)
+      document.querySelector('.mask').style = 'background: url(' + fondo + ') no-repeat; position: absolute; height: 100%; width: 100%; z-index: -1'
+    }
+
+    start()
+
+    function change () {
+      dataBase.ref('/config//finish').set('2021/08/05 07:59:00')
+    }
+  </script>
+</body>
+</html>
