@@ -1,0 +1,22 @@
+sudo apt-get update && sudo apt-get upgrade
+
+nano /etc/sudoers
+nax ALL=(ALL) NOPASSWD:ALL
+
+# git
+apt-get install git && git --version
+
+# brave
+https://brave.com/linux/
+
+# sublime
+https://www.sublimetext.com/docs/linux_repositories.html
+
+# nvm 
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+source ~/.bashrc 
+nvm install 14
+nvm use 14
+
+# yarn
+npm install --global yarn
