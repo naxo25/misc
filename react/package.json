@@ -1,0 +1,15 @@
+{
+  "keywords": [],
+  "author": "naxo25",
+  "license": "ISC",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "servor ./ index.html --browse --reload"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "servor": "^4.0.2"
+  }
+}

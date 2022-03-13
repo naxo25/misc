@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>useCustomHooks</title>
+
+    <!-- React core, dom, babel  -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin ></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin ></script>
+    <script src="https://unpkg.com/babel-standalone/babel.min.js"></script>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <script>
+      const { useState, useEffect } = React
+
+      const useCustomHook = (initialState = 0) => {
+
+        const [counter, setCounter] = useState(initialState)
+        const increment = () => setCounter(counter + 1)
+        const decrement = () => setCounter(counter - 1)
+
+        const [ users, setUsers ] = useState('loading ..')
+        useEffect(() => {
+          fetch('https://randomuser.me/api/?results=3').then(async response => {
+            const users = await response.json()
+            setUsers(JSON.stringify(users.results))
+          })
+        }, [])
+
+        return {
+          value: counter,
+          increment,
+          decrement,
+          users
+        }
+      }
+    </script>
+    <script type="text/babel">
+      const App = () => {
+        const { value, users, increment, decrement } = useCustomHook()
+
+        return (
+          <div>
+            <h3> { value } </h3>
+            <button onClick={ increment }>+</button> <button onClick={ decrement }>-</button>
+            <br/>
+            <br/>
+            <p> Api from random users </p>
+            <p>
+              { users }
+            </p>
+          </div>
+        )
+      }
+      ReactDOM.render(<App />, document.getElementById("app"))
+    </script>
+  </body>
+</html>
